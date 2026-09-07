@@ -1,0 +1,85 @@
+import { useEffect, useState } from 'react'
+import { getWeather } from '@/services/weatherApi'
+import TemperatureChartModal from '@/components/TemperatureChartModal'
+import CurrentWeather from '@/components/CurrentWeather'
+import DailyForecast from '@/components/DailyForecast'
+import HourlyForecast from '@/components/HourlyForecast'
+
+function WeatherPanel({ city, units, isFavorite, onToggleFavorite }) {
+  const [isChartOpen, setIsChartOpen] = useState(false)
+  const [weather, setWeather] = useState(null)
+  const [error, setError] = useState('')
+  const [attempt, setAttempt] = useState(0)
+  const [isRefreshing, setIsRefreshing] = useState(true)
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    getWeather(city.latitude, city.longitude, controller.signal)
+      .then((data) => {
+        if (!controller.signal.aborted) {
+          setWeather({ ...data, fetchedAt: new Date().toISOString() })
+          setError('')
+        }
+      })
+      .catch((error) => {
+        if (!controller.signal.aborted) setError(error.message)
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setIsRefreshing(false)
+      })
+
+    return () => controller.abort()
+  }, [city.latitude, city.longitude, attempt])
+
+  function handleRetry() {
+    if (isRefreshing) return
+    setIsRefreshing(true)
+    setError('')
+    setAttempt((current) => current + 1)
+  }
+
+  if (error && !weather) {
+    return (
+      <div className="mt-8 rounded-2xl border border-red-300/20 bg-[#111e32] p-6">
+        <div className="flex items-start gap-3">
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="mt-0.5 h-6 w-6 shrink-0 text-red-300" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 3 2.8 20h18.4L12 3Z" /><path d="M12 9v5m0 3h.01" /></svg>
+          <div><p className="font-semibold text-white">Couldn’t load the weather</p><p role="alert" className="mt-1 text-sm text-red-200">{error}</p></div>
+        </div>
+        <button
+          type="button"
+          onClick={handleRetry}
+          className="mt-4 rounded-lg bg-sky-500 px-4 py-2 font-semibold text-slate-950 hover:bg-sky-400"
+        >
+          Try again
+        </button>
+      </div>
+    )
+  }
+
+  if (!weather) {
+    return (
+      <div role="status" aria-busy="true" className="mt-8 grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="h-64 animate-pulse rounded-2xl bg-white/5" />
+        <div className="h-96 animate-pulse rounded-2xl bg-white/5" />
+      </div>
+    )
+  }
+
+  return (
+    <div className="mt-10 grid items-stretch gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+      {isChartOpen && (
+        <TemperatureChartModal hours={weather.hourly} currentTime={weather.current.time} city={city} units={units} onClose={() => setIsChartOpen(false)} />
+      )}
+      <div className="min-w-0 space-y-8">
+        <CurrentWeather city={city} weather={weather.current} units={units} onShowChart={() => setIsChartOpen(true)} onRefresh={handleRetry} isRefreshing={isRefreshing} fetchedAt={weather.fetchedAt} refreshError={error} isFavorite={isFavorite} onToggleFavorite={onToggleFavorite} />
+        <DailyForecast days={weather.daily} units={units} />
+      </div>
+      <div className="min-w-0 xl:relative">
+        <HourlyForecast hours={weather.hourly} currentTime={weather.current.time} timeZone={weather.timezone} units={units} />
+      </div>
+    </div>
+  )
+}
+
+export default WeatherPanel

@@ -1,0 +1,81 @@
+<svg width="140" height="140" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+
+  <style>
+
+    .cloud {
+      animation: cloudMove 4s ease-in-out infinite;
+    }
+
+    .rain {
+      animation: rainFall 1s linear infinite;
+    }
+
+    .rain:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .rain:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    .lightning {
+      animation: flash 2s infinite;
+      opacity: 0;
+    }
+
+    @keyframes rainFall {
+      0% {
+        transform: translateY(0px);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+    }
+
+    @keyframes flash {
+      0%, 85%, 100% {
+        opacity: 0;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      95% {
+        opacity: 0.5;
+      }
+    }
+
+    @keyframes cloudMove {
+      0%, 100% {
+        transform: translateX(0px);
+      }
+
+      50% {
+        transform: translateX(4px);
+      }
+    }
+
+  </style>
+
+  <!-- CLOUD -->
+  <g class="cloud">
+    <ellipse cx="70" cy="50" rx="35" ry="20" fill="#9ca3af"></ellipse>
+    <ellipse cx="45" cy="55" rx="22" ry="16" fill="#9ca3af"></ellipse>
+    <ellipse cx="95" cy="55" rx="22" ry="16" fill="#9ca3af"></ellipse>
+  </g>
+
+  <!-- RAIN -->
+  <line class="rain" x1="50" y1="85" x2="50" y2="100" stroke="#38bdf8" stroke-width="4"></line>
+
+  <line class="rain" x1="70" y1="85" x2="70" y2="100" stroke="#38bdf8" stroke-width="4"></line>
+
+  <line class="rain" x1="90" y1="85" x2="90" y2="100" stroke="#38bdf8" stroke-width="4"></line>
+
+  <!-- LIGHTNING -->
+  <polygon class="lightning" points="72,70 58,95 70,95 62,118 88,85 74,85" fill="#facc15"></polygon>
+
+</svg>

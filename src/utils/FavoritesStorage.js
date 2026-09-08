@@ -26,6 +26,6 @@ export function saveFavorites(cities) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cities))
   } catch {
-    // Storage can be unavailable in private browsing or when quota is exceeded.
+    return false
   }
 }

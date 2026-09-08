@@ -8,7 +8,7 @@ const unitOptions = [
 function Header({ units, onUnitsChange }) {
   return (
     <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 py-5">
-      <a href="/" className="text-xl font-bold tracking-tight text-white">
+      <a href="/" className="rounded-md text-xl font-bold tracking-tight text-white transition-colors hover:text-sky-200">
         Weather<span className="text-sky-400">App</span>
       </a>
       <div className="w-full sm:w-64">

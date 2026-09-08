@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
+import { TriangleAlert } from 'lucide-react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { getWeather } from '@/services/weatherApi'
-import TemperatureChartModal from '@/components/TemperatureChartModal'
 import CurrentWeather from '@/components/CurrentWeather'
 import DailyForecast from '@/components/DailyForecast'
 import HourlyForecast from '@/components/HourlyForecast'
+
+const TemperatureChartModal = lazy(() => import('@/components/TemperatureChartModal'))
 
 function WeatherPanel({ city, units, isFavorite, onToggleFavorite }) {
   const [isChartOpen, setIsChartOpen] = useState(false)
@@ -43,7 +45,7 @@ function WeatherPanel({ city, units, isFavorite, onToggleFavorite }) {
     return (
       <div className="mt-8 rounded-2xl border border-red-300/20 bg-[#111e32] p-6">
         <div className="flex items-start gap-3">
-          <svg aria-hidden="true" viewBox="0 0 24 24" className="mt-0.5 h-6 w-6 shrink-0 text-red-300" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 3 2.8 20h18.4L12 3Z" /><path d="M12 9v5m0 3h.01" /></svg>
+          <TriangleAlert aria-hidden="true" className="mt-0.5 h-6 w-6 shrink-0 text-red-300" />
           <div><p className="font-semibold text-white">Couldn’t load the weather</p><p role="alert" className="mt-1 text-sm text-red-200">{error}</p></div>
         </div>
         <button
@@ -69,7 +71,9 @@ function WeatherPanel({ city, units, isFavorite, onToggleFavorite }) {
   return (
     <div className="mt-10 grid items-stretch gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
       {isChartOpen && (
+        <Suspense fallback={<p role="status" className="text-sm text-sky-300">Loading chart...</p>}>
         <TemperatureChartModal hours={weather.hourly} currentTime={weather.current.time} city={city} units={units} onClose={() => setIsChartOpen(false)} />
+        </Suspense>
       )}
       <div className="min-w-0 space-y-8">
         <CurrentWeather city={city} weather={weather.current} units={units} onShowChart={() => setIsChartOpen(true)} onRefresh={handleRetry} isRefreshing={isRefreshing} fetchedAt={weather.fetchedAt} refreshError={error} isFavorite={isFavorite} onToggleFavorite={onToggleFavorite} />

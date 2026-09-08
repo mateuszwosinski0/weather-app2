@@ -1,4 +1,4 @@
-// WMO codes documented at https://open-meteo.com/en/docs
+
 const conditions = {
   0: ['Clear sky', 'icon-sunny.webp'],
   1: ['Mainly clear', 'icon-sunny.webp'],
@@ -39,7 +39,7 @@ export function getWeatherCondition(code, isDay) {
 
   if (isDay === 0) {
     if (code === 0 || code === 1) icon = 'half-moon.png'
-    // No partly-cloudy night asset: use clouds without a sun.
+
     if (code === 2) icon = 'icon-overcast.webp'
   }
 

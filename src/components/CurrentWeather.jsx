@@ -1,3 +1,4 @@
+import { Star, ArrowUpRight, RefreshCw } from 'lucide-react'
 import { formatTemperature, formatWind, formatPrecipitation } from '@/utils/formatWeather'
 import { getWeatherCondition } from '@/utils/weatherConditions'
 
@@ -24,7 +25,7 @@ function CurrentWeather({ city, weather, units, onShowChart, onRefresh, isRefres
             <h2 className="min-w-0 break-words font-heading text-3xl font-bold sm:text-4xl">{city.name}</h2>
             {city.source !== 'geolocation' && (
               <button type="button" onClick={onToggleFavorite} aria-pressed={isFavorite} aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'} title={isFavorite ? 'Remove from favorites' : 'Add to favorites'} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sky-300 hover:bg-sky-300/10 focus-visible:outline-2 focus-visible:outline-sky-400">
-                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill={isFavorite ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round"><path d="m12 3 2.8 5.7 6.3.9-4.55 4.43 1.07 6.27L12 17.34l-5.62 2.96 1.07-6.27L2.9 9.6l6.3-.9Z" /></svg>
+                <Star aria-hidden="true" className="h-5 w-5" fill={isFavorite ? 'currentColor' : 'none'} />
               </button>
             )}
           </div>
@@ -32,8 +33,8 @@ function CurrentWeather({ city, weather, units, onShowChart, onRefresh, isRefres
             {[city.admin1, city.country].filter(Boolean).join(', ')}
           </p>
         </div>
-        <div>
-          <div className="flex items-center gap-3 sm:gap-4">
+        <div className="grid grid-cols-[5rem_auto] items-center justify-items-center gap-x-3 gap-y-2 sm:grid-cols-[6rem_auto] sm:gap-x-4">
+          <div className="col-start-1 row-start-1">
             {condition.icon && (
               <img
                 src={condition.icon}
@@ -43,13 +44,13 @@ function CurrentWeather({ city, weather, units, onShowChart, onRefresh, isRefres
                 className={`h-20 w-20 object-contain sm:h-24 sm:w-24 ${condition.icon.endsWith('half-moon.png') ? 'scale-[0.7]' : ''}`}
               />
             )}
-            <p className="text-6xl font-medium tracking-tighter sm:text-7xl">
+          </div>
+            <p className="col-start-2 row-start-1 text-6xl font-medium tracking-tighter sm:text-7xl">
               {formatTemperature(weather.temperature_2m, units)}
             </p>
-          </div>
-          <p className="mt-2 text-slate-300">{condition.description}</p>
-          <button type="button" onClick={onShowChart} aria-haspopup="dialog" className="mt-2 inline-flex items-center gap-1.5 rounded-md py-1 text-sm font-medium text-sky-300 underline-offset-4 hover:text-sky-100 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400">
-            View chart <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17 17 7M8 7h9v9" /></svg>
+          <p className="col-start-1 row-start-2 text-center text-slate-300">{condition.description}</p>
+          <button type="button" onClick={onShowChart} aria-haspopup="dialog" className="col-start-2 row-start-2 inline-flex items-center gap-1.5 rounded-md py-1 text-sm font-medium text-sky-300 underline-offset-4 hover:text-sky-100 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400">
+            View chart <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
           </button>
         </div>
       </div>
@@ -70,7 +71,7 @@ function CurrentWeather({ city, weather, units, onShowChart, onRefresh, isRefres
           )}
         </p>
         <button type="button" onClick={onRefresh} disabled={isRefreshing} className="inline-flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm font-medium text-sky-300 hover:bg-sky-400/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 disabled:cursor-wait disabled:opacity-50">
-          <svg aria-hidden="true" viewBox="0 0 24 24" className={`h-4 w-4 ${isRefreshing ? 'animate-spin motion-reduce:animate-none' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 11a8 8 0 0 0-14.9-3M4 5v4h4M4 13a8 8 0 0 0 14.9 3M20 19v-4h-4" /></svg> {isRefreshing ? 'Refreshing...' : 'Refresh'}
+          <RefreshCw aria-hidden="true" className={`h-4 w-4 ${isRefreshing ? 'animate-spin motion-reduce:animate-none' : ''}`} /> {isRefreshing ? 'Refreshing...' : 'Refresh'}
         </button>
       </div>
       {refreshError && <p role="alert" className="mt-3 text-sm text-red-300">Could not refresh the forecast. Showing the last loaded data. Please try again.</p>}

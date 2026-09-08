@@ -33,6 +33,6 @@ export function saveLastCity(city) {
   try {
     localStorage.setItem(CITY_STORAGE_KEY, JSON.stringify(value))
   } catch {
-    // Storage can be unavailable in private browsing or when quota is exceeded.
+    return false
   }
 }

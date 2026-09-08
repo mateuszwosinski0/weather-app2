@@ -1,3 +1,4 @@
+import { Search } from 'lucide-react'
 
 function SearchBar({ query, onQueryChange, onSearch, isLoading = false, disabled = false, onOpen, inputRef, voiceControl }) {
 
@@ -17,11 +18,7 @@ function SearchBar({ query, onQueryChange, onSearch, isLoading = false, disabled
       className="flex flex-col gap-3 sm:flex-row"
     >
       <div className="relative flex-1">
-        <img
-          src="/assets/images/icon-search.svg"
-          alt=""
-          className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2"
-        />
+        <Search aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 text-slate-300" />
 
         <input
           ref={inputRef}
@@ -34,7 +31,7 @@ function SearchBar({ query, onQueryChange, onSearch, isLoading = false, disabled
           value={query}
           disabled={disabled}
           onChange={(event) => onQueryChange(event.target.value)}
-          className="w-full rounded-xl border border-slate-700 bg-slate-900 py-3 pl-12 pr-14 text-white placeholder:text-slate-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
+          className="w-full rounded-xl border border-slate-700 bg-slate-900 py-3 pl-12 pr-14 text-white placeholder:text-slate-400 transition-colors enabled:hover:border-slate-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 disabled:opacity-50"
         />
         {voiceControl}
       </div>

@@ -1,3 +1,4 @@
+import { Mic } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 function VoiceSearchButton({ disabled, onResult, onError, onBusyChange }) {
@@ -70,10 +71,7 @@ function VoiceSearchButton({ disabled, onResult, onError, onBusyChange }) {
       title={isListening ? 'Stop listening' : 'Search by voice · Browser language'}
       className={'absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg focus-visible:outline-2 focus-visible:outline-sky-400 disabled:opacity-40 ' + (isListening ? 'bg-red-400/15 text-red-300' : 'text-slate-400 hover:bg-sky-300/10 hover:text-sky-300')}
     >
-      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className={'h-5 w-5 ' + (isListening ? 'animate-pulse motion-reduce:animate-none' : '')} stroke="currentColor" strokeWidth="1.7" strokeLinecap="round">
-        <rect x="9" y="3" width="6" height="12" rx="3" />
-        <path d="M5 11v1a7 7 0 0 0 14 0v-1M12 19v3m-3 0h6" />
-      </svg>
+      <Mic aria-hidden="true" className={'h-5 w-5 ' + (isListening ? 'animate-pulse motion-reduce:animate-none' : '')} />
     </button>
   )
 }

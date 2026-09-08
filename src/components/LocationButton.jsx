@@ -1,10 +1,21 @@
+import { LoaderCircle, LocateFixed, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { getDeviceLocation } from '@/services/geolocation'
+import useClickOutside from '@/hooks/useClickOutside'
 
 function LocationButton({ onCitySelect, onBusyChange, disabled }) {
   const [isLocating, setIsLocating] = useState(false)
   const [error, setError] = useState('')
   const mounted = useRef(true)
+  const rootRef = useRef(null)
+  const buttonRef = useRef(null)
+
+  useClickOutside(rootRef, () => setError(''), Boolean(error))
+
+  function dismissError() {
+    setError('')
+    buttonRef.current?.focus()
+  }
 
   useEffect(() => {
     mounted.current = true
@@ -30,8 +41,15 @@ function LocationButton({ onCitySelect, onBusyChange, disabled }) {
   }
 
   return (
-    <div className="relative shrink-0">
+    <div ref={rootRef} className="relative shrink-0" onKeyDown={(event) => {
+      if (event.key === 'Escape' && error) {
+        event.preventDefault()
+        event.stopPropagation()
+        dismissError()
+      }
+    }}>
       <button
+        ref={buttonRef}
         type="button"
         onClick={handleLocation}
         disabled={disabled || isLocating}
@@ -42,20 +60,20 @@ function LocationButton({ onCitySelect, onBusyChange, disabled }) {
         className="flex h-[50px] w-[50px] items-center justify-center rounded-xl border border-white/10 bg-[#192b43] text-sky-300 transition-colors hover:border-sky-400/40 hover:bg-sky-400/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isLocating ? (
-          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-5 w-5 animate-spin motion-reduce:animate-none">
-            <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="2" opacity="0.25" />
-            <path d="M12 4a8 8 0 0 1 8 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          </svg>
+          <LoaderCircle aria-hidden="true" className="h-5 w-5 animate-spin motion-reduce:animate-none" />
         ) : (
-          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-5 w-5">
-            <circle cx="12" cy="12" r="7" stroke="currentColor" strokeWidth="1.7" />
-            <circle cx="12" cy="12" r="2.5" fill="currentColor" />
-            <path d="M12 2v3m0 14v3M2 12h3m14 0h3" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-          </svg>
+          <LocateFixed aria-hidden="true" className="h-5 w-5" />
         )}
       </button>
       {isLocating && <p role="status" className="sr-only">Waiting for your location...</p>}
-      {error && <p id="location-error" role="alert" className="absolute right-0 top-full z-20 mt-2 w-64 rounded-xl border border-red-400/30 bg-[#14243a] p-3 text-sm text-red-300 shadow-xl">{error}</p>}
+      {error && (
+        <div className="absolute right-0 top-full z-20 mt-2 flex w-64 items-start gap-2 rounded-xl border border-red-400/30 bg-[#14243a] p-3 text-sm text-red-300 shadow-xl">
+          <p id="location-error" role="alert" className="min-w-0 flex-1">{error}</p>
+          <button type="button" onClick={dismissError} aria-label="Dismiss location error" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg hover:bg-red-400/15 focus-visible:outline-2 focus-visible:outline-red-300">
+            <X aria-hidden="true" className="h-4 w-4" />
+          </button>
+        </div>
+      )}
     </div>
   )
 }

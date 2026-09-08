@@ -18,7 +18,7 @@ function SearchBar({ query, onQueryChange, onSearch, isLoading = false, disabled
       className="flex flex-col gap-3 sm:flex-row"
     >
       <div className="relative flex-1">
-        <Search aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 text-slate-300" />
+        <Search aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-300" />
 
         <input
           ref={inputRef}
